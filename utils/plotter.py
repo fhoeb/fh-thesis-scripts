@@ -35,10 +35,10 @@ def plot_2d(xdata, ydata, data, ylabel=None, xlim=None, ylim=None, invert_x=Fals
     colorbar_params_default = {'orientation': 'vertical', 'aspect': 15, 'pad': 1.8}
 
     xlabel = 't'
-    xtics_int = True
-    xtics_nbins = 2
-    ytics_int = True
-    ytics_nbins = 2
+    xticks_int = True
+    xticks_nbins = 2
+    yticks_int = True
+    yticks_nbins = 2
     tick_params = tick_params if tick_params is not None else tick_params_default
     disable_minor_ticks = True
 
@@ -46,7 +46,6 @@ def plot_2d(xdata, ydata, data, ylabel=None, xlim=None, ylim=None, invert_x=Fals
         (colorbar_params if colorbar_params is not None else colorbar_params_default)
     disable_colorbar_minortics = True
     cmap = 'YlOrBr'
-
 
     # Bring ydata and xdata in the correct format if they are not already:
     if len(ydata) == data.shape[0]:
@@ -106,13 +105,13 @@ def plot_2d(xdata, ydata, data, ylabel=None, xlim=None, ylim=None, invert_x=Fals
     if xlim is not None:
         plt.xlim(xlim[0], xlim[1])
 
-    ax.xaxis.set_major_locator(MaxNLocator(integer=xtics_int, nbins=xtics_nbins))
+    ax.xaxis.set_major_locator(MaxNLocator(integer=xticks_int, nbins=xticks_nbins))
 
     # set the limits for the y-axis
     if ylim is not None:
         plt.ylim(ylim[0], ylim[1])
 
-    ax.yaxis.set_major_locator(MaxNLocator(integer=ytics_int, nbins=ytics_nbins))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=yticks_int, nbins=yticks_nbins))
 
     if invert_y:
         top = ygrid[0]
@@ -131,7 +130,7 @@ def plot_2d(xdata, ydata, data, ylabel=None, xlim=None, ylim=None, invert_x=Fals
     extent = [left, right, bottom, top]
     ax.axis(extent)
 
-    # Make the 2D plot:
+    # Plotting core:
     X, Y = np.meshgrid(xgrid, ygrid)
 
     data_min = data.min()
@@ -160,7 +159,7 @@ def plot_2d(xdata, ydata, data, ylabel=None, xlim=None, ylim=None, invert_x=Fals
     ax.tick_params(axis='x', pad=7)
 
 
-def plot_1d(xdata, ydata, ytics_tilde, ytics_labels=None, ylabel=None, xlim=None, ylim=None,
+def plot_1d(xdata, ydata, yticks_tilde, yticks_labels=None, ylabel=None, xlim=None, ylim=None,
             tick_params=None, title=None, fontsize_title=None,
             plotbox_position=None, fontsize_labels=11,
             legend=(None,), legendloc='bottom right', fontsize_legend=None, linewidth=(1.0,), linestyle=('-',),
@@ -168,9 +167,9 @@ def plot_1d(xdata, ydata, ytics_tilde, ytics_labels=None, ylabel=None, xlim=None
     """
         1d-plotting interface
     :param xdata: x-axis data
-    :param ydata: y-axis data (possibly multiple as list: [(0, arr1), (1, arr2), ...])
-    :param ytics_tilde: Points on the y-axis where ytick-labels should be set
-    :param ytics_labels: label-strings for the ytics_tilde labels
+    :param ydata: y-axis data (possibly multiple as list with ydata index: [(0, arr1), (1, arr2), ...])
+    :param yticks_tilde: Points on the y-axis where ytick-labels should be set
+    :param yticks_labels: label-strings for the ytics_tilde labels
     :param ylabel: label of the y-axis
     :param xlim: x-axis limits
     :param ylim: y-axis limits
@@ -191,11 +190,10 @@ def plot_1d(xdata, ydata, ytics_tilde, ytics_labels=None, ylabel=None, xlim=None
     tick_params_default = {'direction': 'in', 'bottom': True, 'top': True, 'left': True, 'right': True}
 
     xlabel = 't'
-    xtics_int = True
-    xtics_nbins = 2
+    xticks_int = True
+    xticks_nbins = 2
     tick_params = tick_params if tick_params is not None else tick_params_default
     disable_minor_ticks = True
-
 
     ax = plt.gca()
     box = ax.get_position()
@@ -230,14 +228,14 @@ def plot_1d(xdata, ydata, ytics_tilde, ytics_labels=None, ylabel=None, xlim=None
     if xlim is not None:
         plt.xlim(xlim[0], xlim[1])
 
-    ax.xaxis.set_major_locator(MaxNLocator(integer=xtics_int, nbins=xtics_nbins))
+    ax.xaxis.set_major_locator(MaxNLocator(integer=xticks_int, nbins=xticks_nbins))
 
     # set the limits for the y-axis
     if ylim is not None:
         plt.ylim(ylim[0], ylim[1])
 
-    if ytics_labels is not None:
-        plt.yticks(ytics_tilde, labels=ytics_labels)
+    if yticks_labels is not None:
+        plt.yticks(yticks_tilde, labels=yticks_labels)
 
     for id, ydat in ydata:
         xdat = xdata
@@ -253,7 +251,6 @@ def plot_1d(xdata, ydata, ytics_tilde, ytics_labels=None, ylabel=None, xlim=None
     # set the position of the plot box
     ax.set_position([box.x0 * plotbox_position[0], box.y0 * plotbox_position[1],
                      box.width * plotbox_position[2], box.height * plotbox_position[3]])
-
 
     # set ticks to custom directions or by default all inside the plot
     if tick_params is not None:
@@ -278,7 +275,7 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
     :param star_size: TN-size of the star
     :param rel_diff: Relative difference between chain and star
     """
-    # set global font parameters for the title:
+    # set global matplotlb rc parameters:
     rc = {'font.family': "serif",
           'font.weight': "normal",
           'font.size': 11,
@@ -293,11 +290,7 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
     plt.rcParams.update(rc)
     fig = plt.gcf()
     nof_rows, nof_cols = 1, 4
-    # get the figsize of the complete plot
-    figsize = None
     fig_format = 'pdf'
-    scaled_height = 29.7
-    scaled_width = 21.0
 
     # get some parameters to adjust the suplots
     adjust_subplots = True
@@ -311,45 +304,38 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
     # tight bbox for the figure:
     bbox_inches = 'tight'
 
-
-    # choose the default figure size
     # figure width is a DINA4-width, figure height is kept to give the plot-ratio, but maximally it's a DINA4-length
-    if figsize is None:
-        # measures of a DINA4 sheet
-        if scaled_height is not None:
-            DINA4_length = scaled_height
-        else:
-            DINA4_length = 29.7
-        if scaled_width is not None:
-            DINA4_width = scaled_width
-        else:
-            DINA4_width = 21.0
-        plot_ratio = DINA4_length / (2*DINA4_width)
-        in_per_cm = 0.39
+    DINA4_length = 29.7
+    DINA4_width = 21.0
+    plot_ratio = DINA4_length / (2*DINA4_width)
+    in_per_cm = 0.39
 
-        # take as figure a folded DINA4-sheet
-        figwidth = DINA4_width * in_per_cm
-        figheight = figwidth * plot_ratio * nof_rows / nof_cols
+    # take as figure a folded DINA4-sheet
+    figwidth = DINA4_width * in_per_cm
+    figheight = figwidth * plot_ratio * nof_rows / nof_cols
 
-        if figheight > DINA4_length * in_per_cm:
-            figheight = DINA4_length * in_per_cm
+    if figheight > DINA4_length * in_per_cm:
+        figheight = DINA4_length * in_per_cm
 
-        # set the variable figsize
-        figsize = (figwidth, figheight)
+    # set the variable figsize
+    figsize = (figwidth, figheight)
 
     # adjust the suplots
     if adjust_subplots:
         plt.subplots_adjust(hspace=hspace, wspace=wspace, top=top, bottom=bottom, left=left, right=right)
 
+
     plot_2d_xdata = np.arange(nof_coefficients)
     vmax = max(np.max(chain_ranks), np.max(star_ranks))
 
+    # Plot chain ranks
     plt.subplot(nof_rows, nof_cols, 1)
     plot_2d(plot_2d_xdata, times, chain_ranks, ylabel='bond', xlim=(times[0], times[-1]),
             ylim=None, invert_x=False, invert_y=True, colorbar=False,
             tick_params=None, colorbar_params=None, title='(I)', fontsize_title=11, vmin=0, vmax=vmax,
             data_transpose=True, data_flipud=False, data_fliplr=False, plotbox_position=None, fontsize_labels=11)
 
+    # Plot star ranks
     plt.subplot(nof_rows, nof_cols, 2)
     if vmax >= 10:
         colorbar_params = {'orientation': 'vertical', 'aspect': 15, 'pad': 1.8,
@@ -364,6 +350,7 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
             data_transpose=True, data_flipud=False, data_fliplr=False, plotbox_position=[0.89, 1, 1, 1],
             fontsize_labels=11)
 
+    # Plot chain and star size
     plt.subplot(nof_rows, nof_cols, 3)
     ymin = int(min(floor(log(np.min(chain_size), 10)), floor(log(np.min(star_size), 10))))
     ymax = int(max(ceil(log(np.max(chain_size), 10)), ceil(log(np.max(star_size), 10))))
@@ -376,6 +363,7 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
             legend=('(I)', '(II)'), legendloc='best', fontsize_legend=10, linewidth=(1.8, 1.8),
             linestyle=('-', '--'), color_list=('blue', 'orange'), xscale='linear', yscale='log')
 
+    # Plot rel. diff between chain and star
     plt.subplot(nof_rows, nof_cols, 4)
     ymin = int(floor(log(np.min(rel_diff[rel_diff != 0]), 10)))
     ymax = int(ceil(log(np.max(rel_diff), 10)))
@@ -384,18 +372,16 @@ def multiplot(root, plot_name, nof_coefficients, times, chain_ranks, star_ranks,
     ytics_labels = ['1e' + str(int(x)) for x in range(ymin, ymax+1)]
     if len(ytics_tilde) > 3:
         ytics_tilde = ytics_tilde[::2]
-
     if len(ytics_labels) > 3:
         ytics_labels = ytics_labels[::2]
-    plot_1d(times, ((0, rel_diff), ), ytics_tilde, ytics_labels=ytics_labels, ylabel=None, xlim=(times[0], times[-1]),
+    plot_1d(times, ((0, rel_diff), ), ytics_tilde, yticks_labels=ytics_labels, ylabel=None, xlim=(times[0], times[-1]),
             ylim=ylim, tick_params=None, title='rel. diff.', fontsize_title=11,
             plotbox_position=None, fontsize_labels=11,
             legend=(None, ), legendloc='best', fontsize_legend=10, linewidth=(1.8, ),
             linestyle=('-',), color_list=('black',), xscale='linear', yscale='log')
 
-    # set the figure size of an image
+    # set the figure size of the image
     fig.set_size_inches(figsize[0], figsize[1])
-
 
     # save the figure
     plt.savefig(join(root, plot_name + '.' + fig_format), bbox_inches=bbox_inches)

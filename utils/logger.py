@@ -57,7 +57,7 @@ class Logger:
 
     def log_metadata(self, fname, metadata):
         """
-            Logs the contents of a dict (metadata) as string in a file named fname in the data folder.
+            Logs the contents of a pythn dict as string in a file named fname in the data folder.
         """
         with open(join(self.root, fname), 'w') as file:
             file.write(str(metadata))

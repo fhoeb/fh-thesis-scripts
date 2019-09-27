@@ -25,10 +25,10 @@ def get_spin_boson_chain_hamiltonian(omega_0, c0, omega, t, bath_local_dim, fini
         used in Sec. 4.4.1 and 4.4.2 of the thesis.
     :param omega_0: Spin energy
     :param c0: Spin-Bath coupling
-    :param omega: Bathe enrgies
+    :param omega: Bath energies
     :param t: Bath-bath couplings
     :param bath_local_dim: Local dimension of the bath
-    :param finite_T: If set True uses the Hamiltonian for Sec. 4.4.2
+    :param finite_T: If set True builds the Hamiltonian for Sec. 4.4.2. If False builds the Hamiltonian for Sec. 4.4.1
     :returns: List of local Hamiltonians, List of coupling Hamiltonians
     """
     if not finite_T:
@@ -67,7 +67,7 @@ def get_spin_boson_star_hamiltonian(omega_0, system_index, gamma, xi, bath_local
     :param gamma: System-Bath couplings
     :param xi: Bath energies
     :param bath_local_dim: Local dimension of the bath
-    :param finite_T: If set True uses the Hamiltonian for Sec. 4.4.2
+    :param finite_T: If set True uses the Hamiltonian for Sec. 4.4.2. If False builds the Hamiltonian for Sec. 4.4.1
     :returns: List of local Hamiltonians, List of coupling Hamiltonians
     """
     if not finite_T:
@@ -104,7 +104,7 @@ def get_boson_boson_chain_hamiltonian(omega_0, c0, omega, t, cutoff_dim):
         used in Sec. 4.4.3 of the thesis.
     :param omega_0: Spin energy
     :param c0: Spin-Bath coupling
-    :param omega: Bathe enrgies
+    :param omega: Bath energies
     :param t: Bath-bath couplings
     :param cutoff_dim: Local dimension of the impurity and bath
     :returns: List of local Hamiltonians, List of coupling Hamiltonians
