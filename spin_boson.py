@@ -12,7 +12,7 @@ import subprocess
 
 # System path which must exist which will contain the subfolder with the data
 root = '.'
-# Name of the subfolder which will contain the data (must exist)
+# Name of the subfolder which will contain the data
 data = 'SB_Ohmic_2_0.8_1'
 
 # General parameters

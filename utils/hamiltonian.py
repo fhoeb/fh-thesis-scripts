@@ -1,4 +1,4 @@
-from scipy.misc import factorial
+from scipy.special import factorial
 from itertools import count
 import numpy as np
 from tmps.utils import pauli, fock
@@ -10,7 +10,7 @@ def get_boson_boson_dim(alpha, cutoff_coh):
         coherent state.
     """
     #
-    pop = lambda x: np.exp(-np.abs(alpha) ** 2 / 2) * alpha ** x / np.sqrt(factorial(x))
+    pop = lambda x: np.exp(-np.abs(alpha) ** 2 / 2) * alpha ** x / np.sqrt(factorial(x, exact=True))
     cutoff_dim = 2
     for n in count(cutoff_dim, 1):
         if np.abs(pop(n))**2 < cutoff_coh:

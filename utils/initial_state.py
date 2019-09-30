@@ -3,7 +3,7 @@ import mpnum as mp
 import tmps
 from tmps.utils import state_reduction_as_ndarray, convert, broadcast_number_ground_state, get_thermal_state
 import time
-from scipy.misc import factorial
+from scipy.special import factorial
 import math
 
 
@@ -226,7 +226,7 @@ def get_boson_boson_0T_star_initial_state(alpha, system_index, nof_coefficients,
     :param cutoff_dim: Local dimension of the system and impurity
     :return: Initial state in MPS form
     """
-    pop = lambda x: np.exp(-np.abs(alpha) ** 2 / 2) * alpha ** x / np.sqrt(factorial(x))
+    pop = lambda x: np.exp(-np.abs(alpha) ** 2 / 2) * alpha ** x / np.sqrt(factorial(x, exact=True))
     sys_psi_0 = convert.to_mparray(pop(np.arange(cutoff_dim)), 'mps')
     # Initial states of the bath sites left and right of the system:
     left_bath_psi_0, right_bath_psi_0 = tmps.utils.broadcast_number_ground_state(cutoff_dim, system_index), \
